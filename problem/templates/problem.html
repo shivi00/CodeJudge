@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-lg" style="margin: 1% 0 0 -3%; width: 120%;">
+  <div class="sticky-md-top">
+    <h2>{{ problem.id }}. {{ problem.name }}</h2>
+  </div>
+  <hr>
+
+  {% autoescape off %}
+
+  <div>{{ problem.statement }}</div>
+  <br>
+  <div>
+    <h6><b>Input:</b></h6>
+    <pre style='margin-bottom: 0;'> {{ problem.input_format }} </pre>
+    <br>
+    <h6><b>Output:</b></h6>
+    <pre style='margin-bottom: 0;'> {{ problem.output_format }} </pre>
+  </div>
+
+  {% endautoescape %}
+
+  <hr>
+
+  <div>
+    <h6><b>Examples:</b></h6>
+    {% for sample in samples %}
+    <div>
+      <b>input</b>
+      <pre style='margin-bottom: 0;'>{{ sample.input }}</pre>
+      <b>output</b>
+      <pre>{{ sample.output }}</pre>
+    </div>
+    {% endfor %}
+  </div>
+
+  <form action="{% url 'problem' problem.id %}" method="POST" style="margin: 0 0 4% 0; ">
+    {% csrf_token %}
+    <fieldset>
+
+      <div class="mb-3" style="width: 40%;">
+        <label for="language" class="form-label">
+          <h6>Judges:</h6>
+        </label>
+        <select id="language" name="language" class="form-select" style="background-color: lightgrey;">
+          {% for judge in judges %}
+            {% if prejudge == judge.1 %}
+              <option selected>{{ judge.1 }}</option>
+            {% else %}
+              <option>{{ judge.1 }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="user_solution" class="form-label">
+          <h6>Source Code:</h6>
+        </label>
+        <textarea class="form-control" name="code" id="user_solution" rows="10">{{ precode }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </fieldset>
+  </form>
+
+</div>
+
+{% endblock content %}
